@@ -72,4 +72,4 @@ jobs:
           DB_DATABASE: laravel
           DB_USERNAME: laraveluser
           DB_PASSWORD: secret
-        run: vendor/bin/phpunit --verbose
+        run: vendor/bin/phpunit
