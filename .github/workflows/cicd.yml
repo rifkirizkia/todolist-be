@@ -32,17 +32,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            docker stop todolist-be || true
-            docker rm todolist-be || true
-            docker pull ${{ secrets.DOCKER_USERNAME }}/todolist-be:latest
-            docker run -d --name todolist-be -p 8000:8000 \
-              -e APP_ENV=production \
-              -e APP_KEY=${{ secrets.LARAVEL_APP_KEY }} \
-              -e DB_HOST=${{ secrets.DB_HOST }} \
-              -e DB_PORT=${{ secrets.DB_PORT }} \
-              -e DB_DATABASE=${{ secrets.DB_DATABASE }} \
-              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -v /home/${{ secrets.SERVER_USER }}/laravel-storage:/var/www/storage \
-              ${{ secrets.DOCKER_USERNAME }}/todolist-be:latest
+            cd /home/${{ secrets.SERVER_USER }}/todolist-be
+            docker-compose pull
+            docker-compose down
+            docker-compose up -d
             docker exec todolist-be php artisan migrate --force
+          
