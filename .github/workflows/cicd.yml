@@ -45,3 +45,4 @@ jobs:
             
               echo "Run Laravel migration"
               docker exec todolist-be php artisan migrate --force
+              
