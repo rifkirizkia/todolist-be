@@ -1,22 +1,34 @@
+# Dockerfile untuk Laravel dengan PHP-FPM & Composer
+
 FROM php:8.1-fpm
 
-# Install dependencies, ekstensi Laravel
+# Install system dependencies dan PHP extensions yang dibutuhkan Laravel
 RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip nginx supervisor \
-    && docker-php-ext-install pdo pdo_mysql zip
+    git unzip libzip-dev zip libpng-dev libonig-dev libxml2-dev curl nginx \
+    && docker-php-ext-install pdo_mysql zip mbstring exif pcntl bcmath gd
 
-# Install composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Install composer secara manual
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    php -r "unlink('composer-setup.php');"
 
+# Set working directory
 WORKDIR /var/www/html
 
+# Copy source code Laravel ke container
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+# Install dependencies Laravel lewat composer
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-# Set permission storage & bootstrap/cache
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Set permission folder storage dan bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 9000
+# Copy konfigurasi nginx (buat file nginx.conf terpisah atau inline config)
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
-CMD ["php-fpm"]
+# Expose port 80 untuk nginx
+EXPOSE 80
+
+# Jalankan php-fpm dan nginx secara bersamaan (pakai supervisor atau script)
+CMD service php8.1-fpm start && nginx -g "daemon off;"
