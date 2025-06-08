@@ -1,37 +1,34 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: laravel-app
+  laravel-app:
+    image: rifkirizkia/todolist-be:latest
+    container_name: todolist-be
     ports:
-      - "8000:80"
+      - "8000:80"  # akses Laravel di http://your-server-ip:8000
     volumes:
-      - .:/var/www/html
+      - ./storage:/var/www/html/storage
+      - ./bootstrap/cache:/var/www/html/bootstrap/cache
+      - ./.env:/var/www/html/.env
+    env_file:
+      - ./.env
     depends_on:
-      - db
-    environment:
-      - APP_KEY=${LARAVEL_APP_KEY}
-      - DB_HOST=db
-      - DB_DATABASE=laravel
-      - DB_USERNAME=laravel
-      - DB_PASSWORD=secret
+      - mysql
+    restart: unless-stopped
 
-  db:
+  mysql:
     image: mysql:8.0
-    container_name: laravel-db
+    container_name: todolist-db
     ports:
       - "3306:3306"
-    restart: always
     environment:
-      MYSQL_DATABASE: laravel
-      MYSQL_USER: laravel
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: todolist1234
+      MYSQL_DATABASE: todolist_tdd
+      MYSQL_USER: todolist
+      MYSQL_PASSWORD: todolist1234
     volumes:
-      - db_data:/var/lib/mysql
+      - mysql_data:/var/lib/todolist_db
+    restart: unless-stopped
 
 volumes:
-  db_data:
+  mysql_data:
