@@ -32,8 +32,17 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            cd /home/${{ secrets.SERVER_USER }}/app/beckend
-            docker-compose down
-            docker-compose pull
-            docker-compose up -d --build
-            docker exec todolist-be php artisan migrate --force
+              cd /home/${{ secrets.SERVER_USER }}/app/beckend
+
+              echo "Stop and remove old containers"
+              docker-compose down
+            
+              echo "Pull latest images"
+              docker-compose pull
+            
+              echo "Start containers"
+              docker-compose up -d
+            
+              echo "Run Laravel migration"
+              docker exec todolist-be php artisan migrate --force
+              
