@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       - name: Install Composer Dependencies
         run: |
           composer install --no-dev --optimize-autoloader
@@ -48,5 +48,5 @@ jobs:
               docker-compose up -d
             
               echo "Run Laravel migration"
-              docker exec todolist-be php artisan migrate --force
+              docker exec todolist-be php /var/www/html/artisan migrate --force
               
