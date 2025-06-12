@@ -23,10 +23,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: todolist1234
-      MYSQL_DATABASE: todolist_tdd
-      MYSQL_USER: todolist
-      MYSQL_PASSWORD: todolist1234
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: todolist
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     volumes:
       - mysql_data:/var/lib/todolist_db
     restart: unless-stoppedAdd commentMore actions
