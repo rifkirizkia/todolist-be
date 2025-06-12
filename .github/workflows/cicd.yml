@@ -33,7 +33,6 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           script: |
             cd /home/${{ secrets.SERVER_USER }}/app/beckend
-            docker-compose down
             docker-compose pull
             docker-compose up -d --build
             docker exec todolist-be php artisan migrate --force
