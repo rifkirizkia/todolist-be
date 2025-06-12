@@ -43,7 +43,8 @@ jobs:
             
             echo "Stopping and removing existing container (if any)..."
             docker stop todolist-be || true
-            
+            docker rm todolist-be || true
+
             echo "Pulling new image..."
             docker pull ${{ secrets.DOCKER_USERNAME }}/todolist-be:${{ env.SHORT_SHA }}
             
